@@ -40,18 +40,18 @@ def wishMe():
 def takeCommand():
     # It takes microphone input from the user and returns string output, microphone input requires PyAudio - ​pip install pipwin , pipwin install pyaudio
     
-    r = sr.Recognizer()
+    a = sr.Recognizer()
     with sr.Microphone() as source:
         print('Listening...')
-        r.pause_threshold =1 #1 second gap during speech
-        r.energy_threshold =300 # minimum audio wave amplitude/energy
-        r.adjust_for_ambient_noise(source , duration =1) #dynamically adjust the energy thereshold 
-        audio = r.listen(source)  
+        a.pause_threshold =1 #1 second gap during speech
+        a.energy_threshold =300 # minimum audio wave amplitude/energy
+        a.adjust_for_ambient_noise(source , duration =1) #dynamically adjust the energy thereshold 
+        audio = a.listen(source)  
 
         try:
             print('Recongnizing...')
-            query = r.recognize_google(audio, language='en=us')
-            print(f'User Said: {query}\n')
+            query = a.recognize_google(audio, language='en=us')
+            print(f'User Said: {query}\n') #when we are using variable we have to use with f' so the voice reads the value of the variable
         except Exception as e:
             print(e)
             print("Say that again please...")
@@ -60,19 +60,24 @@ def takeCommand():
         return query
 
 
+def LaptopSleep():
+    choice=input("Are you sure you want to put PC to sleep?(y/n)")
+    if choice=='n':
+        return
+    else : #turn hiberantion mode off by executing command : Powercfg -H OFF in powershell 
+        os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0") #os.system(string) - it actually executes the string in a windows powershell
+        exit(0)
 
 
 if __name__ == '__main__': 
     wishMe()
     while True :
         query = takeCommand().lower()
-        
+        #always write queries in lower case , so it can easily be recognized
         if 'your name' in query:
             speak('My Name Is Friday')
         elif 'who are you' in query:
             speak('I am FRIDAY - Female Replacement Intelligent Digital Assistant Youth Working For Visakh Bobby , My Creator')
-        elif ' best friend' in query:
-            speak('Aditi Is In Bangalore ,Karnataka , India. ')
         elif 'wikipedia' in query:
             speak('Searching Wikipedia')
             query = query.replace('Wikipedia', '')
@@ -83,7 +88,7 @@ if __name__ == '__main__':
         elif 'open google' in query:
             webbrowser.open('google.com')
         elif 'time' in query:
-            strTime = datetime.datetime.now().strftime("%H hours %M minutes %S seconds")
+            strTime = datetime.datetime.now().strftime("%I  %M  %p")
             speak(f'Sir the time is{strTime}')
         elif 'open code' in query:
             codePath = "C:\\Users\\Vk_57\\Desktop\\Python\\test.py"
@@ -96,9 +101,7 @@ if __name__ == '__main__':
            # songs = os.listdir(music_dir) //returns all the songs from the directory 
            # os.startfile(os.path.join(music_dir,[random.randrange(0,3)]))
         elif 'my father' in query: 
-            speak(" Your Father's Name is Bobby Bhargavan ,Born on April thirtieth ,1971 ,He is 49 Years Old And is currently working as a general physician in Muscat, Oman")
-        elif 'goku' in query:
-            speak('Gokul is Your Friend ') 
+            speak(" Your Father's Name is Bobby Bhargavan ,Born on April thirtieth ,1971 ,He is 49 Years Old And is currently working as a general physician in Muscat, Oman")           
         elif 'add' in query:
             speak("Enter First Number:")
             num1 = float(input("Enter First Number:"))
@@ -106,7 +109,14 @@ if __name__ == '__main__':
             num2 = float(input("Enter Second Number:"))
             print(f'Sum = {num1+num2}')
             speak(f'The Addition of {num1} and {num2} is {num1+num2}')
+        elif'open facebook' in query:
+            webbrowser.open("www.facebook.com", new =2)
+        elif 'laptop to rest' in query:
+           LaptopSleep()
+        elif 'open youtube' in query:
+            webbrowser.open("www.youtube.com", new =2)
         elif 'exit' in query:
+            speak('Goodbye Visakh')
             exit(0)
 
 
